@@ -128,7 +128,7 @@ int main(void)
   /* USER CODE BEGIN 3 */
   BMX_Accl();
   char s[100];
-  sprintf(s,"%02x\n",xAccl);
+  sprintf(s,"%f\n",xAccl);
   HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),1000);
   HAL_Delay(1000);
   }
