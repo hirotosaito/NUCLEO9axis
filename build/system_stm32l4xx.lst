@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
   29:Src/system_stm32l4xx.c ****   *-----------------------------------------------------------------------------
   30:Src/system_stm32l4xx.c ****   *        SYSCLK(Hz)                             | 4000000
   31:Src/system_stm32l4xx.c ****   *-----------------------------------------------------------------------------
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 2
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 2
 
 
   32:Src/system_stm32l4xx.c ****   *        HCLK(Hz)                               | 4000000
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
   86:Src/system_stm32l4xx.c ****   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
   87:Src/system_stm32l4xx.c ****   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
   88:Src/system_stm32l4xx.c ****   * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 3
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 3
 
 
   89:Src/system_stm32l4xx.c ****   * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  143:Src/system_stm32l4xx.c ****                                    This value must be a multiple of 0x200. */
  144:Src/system_stm32l4xx.c **** /******************************************************************************/
  145:Src/system_stm32l4xx.c **** /**
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 4
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 4
 
 
  146:Src/system_stm32l4xx.c ****   * @}
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
   30              		@ args = 0, pretend = 0, frame = 0
   31              		@ frame_needed = 0, uses_anonymous_args = 0
   32              		@ link register save eliminated.
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 5
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 5
 
 
  198:Src/system_stm32l4xx.c ****   /* FPU settings ------------------------------------------------------------*/
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  225:Src/system_stm32l4xx.c **** #else
  226:Src/system_stm32l4xx.c ****   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
   60              		.loc 1 226 0
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 6
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 6
 
 
   61 0038 4FF00063 		mov	r3, #134217728
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  261:Src/system_stm32l4xx.c ****   *         (***) HSE_VALUE is a constant defined in stm32l4xx_hal.h file (default value
  262:Src/system_stm32l4xx.c ****   *              8 MHz), user has to ensure that HSE_VALUE is same as the real
  263:Src/system_stm32l4xx.c ****   *              frequency of the crystal used. Otherwise, this function may
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 7
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 7
 
 
  264:Src/system_stm32l4xx.c ****   *              have wrong result.
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  111              	.L9:
  112 002a 0C       		.byte	(.L8-.L9)/2
  113 002b 47       		.byte	(.L7-.L9)/2
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 8
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 8
 
 
  114 002c 47       		.byte	(.L7-.L9)/2
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  316:Src/system_stm32l4xx.c ****         case 0x03:  /* HSE used as PLL clock source */
  317:Src/system_stm32l4xx.c ****           pllvco = (HSE_VALUE / pllm);
  318:Src/system_stm32l4xx.c ****           break;
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 9
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 9
 
 
  319:Src/system_stm32l4xx.c **** 
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  307:Src/system_stm32l4xx.c ****       pllm = ((RCC->PLLCFGR & RCC_PLLCFGR_PLLM) >> 4U) + 1U ;
  171              		.loc 1 307 0
  172 006c 144B     		ldr	r3, .L19
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 10
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 10
 
 
  173 006e DA68     		ldr	r2, [r3, #12]
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  218              		.loc 1 327 0
  219 00ae CAE7     		b	.L13
  220              	.LVL20:
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 11
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 11
 
 
  221              	.L16:
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  276 000b 04       		.byte	4
  277 000c 06       		.byte	6
  278 000d 07       		.byte	7
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 12
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 12
 
 
  279 000e 08       		.byte	8
@@ -699,27 +699,27 @@ ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 1
  318              		.file 6 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l476xx.h"
  319              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h"
  320              		.file 8 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l4xx.h"
-ARM GAS  C:\Users\81806\AppData\Local\Temp\cci7JXGd.s 			page 13
+ARM GAS  C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 system_stm32l4xx.c
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:18     .text.SystemInit:00000000 $t
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:25     .text.SystemInit:00000000 SystemInit
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:68     .text.SystemInit:00000040 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:74     .text.SystemCoreClockUpdate:00000000 $t
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:81     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:112    .text.SystemCoreClockUpdate:0000002a $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:239    .text.SystemCoreClockUpdate:000000c0 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:299    .rodata.MSIRangeTable:00000000 MSIRangeTable
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:285    .rodata.APBPrescTable:00000000 APBPrescTable
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:264    .rodata.AHBPrescTable:00000000 AHBPrescTable
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:257    .data.SystemCoreClock:00000000 SystemCoreClock
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:253    .data.SystemCoreClock:00000000 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:260    .rodata.AHBPrescTable:00000000 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:282    .rodata.APBPrescTable:00000000 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:295    .rodata.MSIRangeTable:00000000 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:126    .text.SystemCoreClockUpdate:00000037 $d
-C:\Users\81806\AppData\Local\Temp\cci7JXGd.s:126    .text.SystemCoreClockUpdate:00000038 $t
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:18     .text.SystemInit:00000000 $t
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:25     .text.SystemInit:00000000 SystemInit
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:68     .text.SystemInit:00000040 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:74     .text.SystemCoreClockUpdate:00000000 $t
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:81     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:112    .text.SystemCoreClockUpdate:0000002a $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:239    .text.SystemCoreClockUpdate:000000c0 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:299    .rodata.MSIRangeTable:00000000 MSIRangeTable
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:285    .rodata.APBPrescTable:00000000 APBPrescTable
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:264    .rodata.AHBPrescTable:00000000 AHBPrescTable
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:257    .data.SystemCoreClock:00000000 SystemCoreClock
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:253    .data.SystemCoreClock:00000000 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:260    .rodata.AHBPrescTable:00000000 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:282    .rodata.APBPrescTable:00000000 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:295    .rodata.MSIRangeTable:00000000 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:126    .text.SystemCoreClockUpdate:00000037 $d
+C:\Users\81806\AppData\Local\Temp\ccT9bdYt.s:126    .text.SystemCoreClockUpdate:00000038 $t
 
 NO UNDEFINED SYMBOLS
