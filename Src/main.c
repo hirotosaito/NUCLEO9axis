@@ -53,10 +53,18 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 #define Addr_Accl 0x19
-float xAccl=0.00;
+#define I2C_BUF_SIZE 8
+
+float xAccl=10.00;
 float yAccl=0.00;
 float zAccl=0.00;
 /* USER CODE END PV */
+
+uint8_t r_data = 0;
+char k[100];
+char ki[] = {"Mem read 0x00 = "};
+char s[100];
+char si[] = {"xaccl = "}; 
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -112,12 +120,13 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+ 
   while (1)
   {
 
   /* USER CODE END WHILE */
-  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
-  HAL_Delay(1000);
+//  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
+//  HAL_Delay(1000);
 
  /* uint8_t r_data;
   HAL_I2C_Mem_Read(&hi2c1,0x19<<1,0x00,1,&r_data,1,1000);
@@ -126,10 +135,21 @@ int main(void)
   HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),1000);
   */
   /* USER CODE BEGIN 3 */
-  BMX_Accl();
-  char s[100];
-  sprintf(s,"%f\n",xAccl);
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),1000);
+ // BMX_Accl();
+
+
+  //0x00 mem read return fa 
+  HAL_I2C_Mem_Read(&hi2c1,0x19<<1,0x00,1,&r_data,1,100);
+  sprintf(k,"%02x\n",r_data);
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&ki[0]),strlen(&ki[0]),100);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&k[0]),strlen(&k[0]),100);
+  HAL_Delay(1000);
+
+  //xaccl read return xaccel
+  BMX_Accl();  
+  sprintf(s,"%d\n",xAccl);
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
   HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -139,26 +159,26 @@ int main(void)
 /** BMX Init*/
 void BMX_Init(void){
 // init x axis  
-  uint8_t p_data_x1 = 0x0F;
-  uint8_t p_data_x2 = 0x03;
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_x1,1,100);
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_x2,1,100);
+  uint8_t p_data_x1[I2C_BUF_SIZE] = {0x0F};
+  uint8_t p_data_x2[I2C_BUF_SIZE] = {0x03};
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,p_data_x1,I2C_BUF_SIZE,100);
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,p_data_x2,I2C_BUF_SIZE,100);
   HAL_Delay(100);
-
+/*
 //init yaxis
   uint8_t p_data_y1 = 0x10;
   uint8_t p_data_y2 = 0x08;
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_y1,1,100);
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_y2,1,100);
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,&p_data_y1,1,100);
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,&p_data_y2,1,100);
   HAL_Delay(100);
 
 //init zaxis
   uint8_t p_data_z1 = 0x11;
   uint8_t p_data_z2 = 0x00;
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_z1,1,100);
-  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&p_data_z2,1,100);
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,&p_data_z1,1,100);
+  HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,&p_data_z2,1,100);
   HAL_Delay(100);
-
+*/
 }
 /** BMX read Acceleration */
 void BMX_Accl(void){
@@ -166,20 +186,21 @@ void BMX_Accl(void){
   int Addr = 0;
   for (int i=0;i<6;i++){
     Addr=i+2;
-    HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl<<1,&Addr,1,100);
-    HAL_I2C_Master_Receive(&hi2c1,Addr_Accl<<1,&data[i],1,100);
+    HAL_I2C_Master_Transmit(&hi2c1,Addr_Accl,&Addr,1,100);
+    HAL_I2C_Master_Receive(&hi2c1,Addr_Accl,&data[i],1,100);
   }
-  
+
   xAccl = (data[1]*256) + (data[0]&0x0F);
   if(xAccl>2047) xAccl -= 4096; 
-  yAccl = (data[3]*256) + (data[2]&0x0F);
+/*  yAccl = (data[3]*256) + (data[2]&0x0F);
   if(yAccl>2047) yAccl -= 4096;
   zAccl = (data[5]*256) + (data[4]&0x0F);
   if(yAccl>2047) yAccl -= 4096;
+*/
 
   xAccl = xAccl*0.0098;
-  yAccl = yAccl*0.0098;
-  zAccl = zAccl*0.0098;
+//  yAccl = yAccl*0.0098;
+//  zAccl = zAccl*0.0098;
 }
 
 /**
