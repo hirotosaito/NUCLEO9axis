@@ -53,19 +53,24 @@ UART_HandleTypeDef huart2;
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
 #define Addr_Accl 0x19
-#define I2C_BUF_SIZE 8
+#define I2C_BUF_SIZE 100
 
-float xAccl=0;
-float yAccl=0.00;
-float zAccl=0.00;
+float xAccl = 0.00;
+float yAccl = 0.00;
+float zAccl = 0.00;
+
 /* USER CODE END PV */
 
 
 uint8_t r_data = 0;
-char k[100];
-char ki[] = {"Mem read 0x00 = "};
-char s[100];
-char si[] = {"xaccl = "}; 
+uint8_t r_data2 = 0;
+
+char k[I2C_BUF_SIZE];
+char ki[] = {"Mem 0x00 value = "};
+char s[I2C_BUF_SIZE];
+char test_buf[100];
+
+//char si[] = {"xaccl = "}; 
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -124,55 +129,62 @@ int main(void)
  
   while (1)
   {
-
-  /* USER CODE END WHILE */
-//  HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_5);
-//  HAL_Delay(1000);
- /* uint8_t r_data;
-  HAL_I2C_Mem_Read(&hi2c1,0x19<<1,0x00,1,&r_data,1,1000);
-  char s[100];
-  sprintf(s,"%02x\n",r_data);
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),1000);
-  */
-  /* USER CODE BEGIN 3 */
- // BMX_Accl();
-
-
   //0x00 mem read return fa 
-  HAL_I2C_Mem_Read(&hi2c1,0x19<<1,0x00,1,&r_data,1,100);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x00,1,&r_data,1,100);
   sprintf(k,"%02x\n",r_data);
   HAL_UART_Transmit (&huart2,(uint8_t*)(&ki[0]),strlen(&ki[0]),100);  
   HAL_UART_Transmit (&huart2,(uint8_t*)(&k[0]),strlen(&k[0]),100);
   HAL_Delay(1000);
 
-  //xaccl read return xaccel
-  BMX_Accl();  
-  sprintf(s,"%f\n",xAccl);
+  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,0x3B,1,0xFF,1,100);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
+  sprintf(test_buf,"test val =%02x\n",r_data2);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
+  HAL_Delay(1000);
+
+/*  //xaccl read return xaccel
+  BMX_Accl(); 
+  sprintf(s,"%d\n",xAccl);
   HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
   HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
-  HAL_Delay(1000);
-  }
-  /* USER CODE END 3 */
+ // HAL_Delay(1000);
+*/
+//  fxAccl = -683.223;
+  BMX_Accl();
+  char *tempsign = (xAccl < 0) ? "-":"";
+  double tempval = (xAccl<0) ? -1*xAccl:xAccl;
+  int tempInt1 = (int)tempval;
+  float tempfrac = tempval - tempInt1;
+  int tempInt2 = trunc(tempfrac*100000);  
 
+  sprintf(s,"xAccl = %s%d.%04d\n",tempsign,tempInt1,tempInt2);
+ // HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
+  HAL_Delay(1000);
 }
 
 /** BMX Init*/
 void BMX_Init(void){
 // init x axis 
-//select PMU range resisiter and set to -2g to 2g
-uint16_t Mem_PMU_Range = 0x0F;
-uint8_t p_Range = 0x03;
-HAL_I2C_Mem_Write(&hi2c1,xAccl,Mem_PMU_Range,1,&p_Range,1,100);
 
 //select PMU band width resisiter and set to 7.81 Hz
 uint16_t Mem_PMU_BW = 0x10;
 uint8_t p_BW = 0x08;
-HAL_I2C_Mem_Write(&hi2c1,xAccl,Mem_PMU_BW,1,&p_BW,1,100);
+HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Mem_PMU_BW,1,&p_BW,1,100);
+HAL_Delay(100);
+
+//select PMU range resisiter and set to -2
+uint16_t Mem_PMU_Range = 0x0F;
+uint8_t p_Range = 0x03;
+HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Mem_PMU_Range,1,&p_Range,1,100);
+HAL_Delay(100);
 
 //select PMU LPW resisiter and Normal mode
 uint16_t Mem_PMU_LPW = 0x11;
 uint8_t p_LPW = 0x00;
-HAL_I2C_Mem_Write(&hi2c1,xAccl,Mem_PMU_LPW,1,&p_LPW,1,100);
+HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Mem_PMU_LPW,1,&p_LPW,1,100);
+HAL_Delay(100);
+
 
 }
 
@@ -183,14 +195,25 @@ void BMX_Accl(void){
   uint8_t Mem_xMSB = 0x03;
   uint8_t Mem_xLSB = 0x02;
 
+  uint8_t Shadow_dis = 0x13;
+  uint8_t SetValue = 0x00;
+  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
+
   HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xLSB,1,&xAccl_LSB,1,100);
+  HAL_Delay(100);
   HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xMSB,1,&xAccl_MSB,1,100);
+  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
   
-  xAccl_MSB = (uint16_t)xAccl_MSB;
-  xAccl_LSB = (uint16_t)xAccl_LSB;
-  xAccl = (float)(xAccl_MSB<<4) + (float)(xAccl_LSB>>4);
-  //xAccl = xAccl*0.0098;
+  xAccl = ((xAccl_MSB*256) + (xAccl_LSB & 0xF0))/16;
+  if(xAccl>2047) xAccl -= 4096;
+
+  xAccl = xAccl*0.0098;
+
+//  xAccl = (float)((xAccl_MSB<<4) + (xAccl_LSB>>4));
+//  xAccl = xAccl*0.0098;
 }
+
+                
 
 /**
   * @brief System Clock Configuration
