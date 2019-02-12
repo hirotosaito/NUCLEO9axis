@@ -136,11 +136,17 @@ int main(void)
   HAL_UART_Transmit (&huart2,(uint8_t*)(&k[0]),strlen(&k[0]),100);
   HAL_Delay(1000);
 
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,0x3B,1,0xFF,1,100);
+//  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<2,0x3B,1,0xFF,1,100);
   HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
-  sprintf(test_buf,"test val =%02x\n",r_data2);  
+  sprintf(test_buf,"GP val 0xFF =%02x\n",r_data2);  
   HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
   HAL_Delay(1000);
+
+/*  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl,0x3B,1,0x00,1,100);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
+  sprintf(test_buf,"GP val 0x00 =%02x\n",r_data2);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
+  HAL_Delay(1000);  */
 
 /*  //xaccl read return xaccel
   BMX_Accl(); 
@@ -161,6 +167,7 @@ int main(void)
  // HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
   HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
   HAL_Delay(1000);
+}
 }
 
 /** BMX Init*/
