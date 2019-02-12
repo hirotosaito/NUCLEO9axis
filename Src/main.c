@@ -211,13 +211,25 @@ void BMX_Accl(void){
   uint8_t Mem_xLSB = 0x02;
 
   uint8_t Shadow_dis = 0x13;
-  uint8_t SetValue = 0x00;
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
+  uint8_t SetValue;
 
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xLSB,1,&xAccl_LSB,1,100);
-  HAL_Delay(100);
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xMSB,1,&xAccl_MSB,1,100);
+  uint8_t r_data3;
+
+  SetValue = 0b00000000;
   HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&r_data3,1,100);
+  sprintf(test_buf,"shadow dis =%02x\n",r_data3);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
+  
+  HAL_Delay(1000);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xLSB,1,&xAccl_LSB,1,100);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xMSB,1,&xAccl_MSB,1,100);
+  
+  SetValue = 0b01000000;
+  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);  
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&r_data3,1,100);
+  sprintf(test_buf,"shadow dis =%02x\n",r_data3);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
   
   xAccl = ((xAccl_MSB*256) + (xAccl_LSB & 0xF0))/16;
   if(xAccl>2047) xAccl -= 4096;
