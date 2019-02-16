@@ -61,16 +61,11 @@ float zAccl = 0.00;
 
 /* USER CODE END PV */
 
-
 uint8_t r_data = 0;
 uint8_t r_data2 = 0;
 
 char k[I2C_BUF_SIZE];
-char ki[] = {"Mem 0x00 value = "};
 char s[I2C_BUF_SIZE];
-char test_buf[100];
-
-//char si[] = {"xaccl = "}; 
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -80,14 +75,9 @@ static void MX_I2C1_Init(void);
 
 void BMX_Init(void);
 void BMX_Accl(void);
-/* USER CODE BEGIN PFP */
-/* Private function prototypes -----------------------------------------------*/
+void BMX_Set_Shadow_dis(_Bool);
+_Bool BMX_Check_connection(void);
 
-/* USER CODE END PFP */
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
@@ -122,6 +112,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   BMX_Init();
+  BMX_Check_connection();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -129,54 +120,10 @@ int main(void)
  
   while (1)
   {
-  //0x00 mem read return fa 
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x00,1,&r_data,1,100);
-  sprintf(k,"%02x\n",r_data);
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&ki[0]),strlen(&ki[0]),100);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&k[0]),strlen(&k[0]),100);
-  HAL_Delay(1000);
-
-  uint8_t transdata = 0xFF;
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,0x3B,1,&transdata,1,100);
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
-  sprintf(test_buf,"GP val 0xFF =%02x\n",r_data2);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
-  HAL_Delay(1000);
-
-  transdata = 0x00;
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,0x3B,1,&transdata,1,100);
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
-  sprintf(test_buf,"GP val 0xFF =%02x\n",r_data2);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
-  HAL_Delay(1000);
-
-/*  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl,0x3B,1,0x00,1,100);
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x3B,1,&r_data2,1,100);
-  sprintf(test_buf,"GP val 0x00 =%02x\n",r_data2);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
-  HAL_Delay(1000);  */
-
-/*  //xaccl read return xaccel
-  BMX_Accl(); 
-  sprintf(s,"%d\n",xAccl);
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
- // HAL_Delay(1000);
-*/
-//  fxAccl = -683.223;
-  BMX_Accl();
-  char *tempsign = (xAccl < 0) ? "-":"";
-  double tempval = (xAccl<0) ? -1*xAccl:xAccl;
-  int tempInt1 = (int)tempval;
-  float tempfrac = tempval - tempInt1;
-  int tempInt2 = trunc(tempfrac*100000);  
-
-  sprintf(s,"xAccl = %s%d.%04d\n",tempsign,tempInt1,tempInt2);
- // HAL_UART_Transmit (&huart2,(uint8_t*)(&si[0]),strlen(&si[0]),100);    
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
-  HAL_Delay(1000);
+   BMX_Accl();
+  }
 }
-}
+
 
 /** BMX Init*/
 void BMX_Init(void){
@@ -199,49 +146,74 @@ uint16_t Mem_PMU_LPW = 0x11;
 uint8_t p_LPW = 0x00;
 HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Mem_PMU_LPW,1,&p_LPW,1,100);
 HAL_Delay(100);
-
-
 }
 
-/** BMX read Acceleration */
+// BMX read Acceleration 
 void BMX_Accl(void){
   uint8_t xAccl_MSB;
   uint8_t xAccl_LSB;
+  uint8_t yAccl_MSB;
+  uint8_t yAccl_LSB;
+  uint8_t zAccl_MSB;
+  uint8_t zAccl_LSB;
+
+  uint8_t Mem_xLSB = 0x02;  
   uint8_t Mem_xMSB = 0x03;
-  uint8_t Mem_xLSB = 0x02;
-
-  uint8_t Shadow_dis = 0x13;
-  uint8_t SetValue;
-
-  uint8_t r_data3;
-
-  SetValue = 0b00000000;
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&r_data3,1,100);
-  sprintf(test_buf,"shadow dis =%02x\n",r_data3);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
+  uint8_t Mem_yLSB = 0x04;
+  uint8_t Mem_yMSB = 0x05;
+  uint8_t Mem_zLSB = 0x06;  
+  uint8_t Mem_zMSB = 0x07;
   
-  HAL_Delay(1000);
+  _Bool is_available = 1;
+  _Bool is_unavailable = 0;
+
   HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xLSB,1,&xAccl_LSB,1,100);
+  BMX_Set_Shadow_dis(is_available);
   HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_xMSB,1,&xAccl_MSB,1,100);
+  BMX_Set_Shadow_dis(is_unavailable);
   
-  SetValue = 0b01000000;
-  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);  
-  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&r_data3,1,100);
-  sprintf(test_buf,"shadow dis =%02x\n",r_data3);  
-  HAL_UART_Transmit (&huart2,(uint8_t*)(&test_buf[0]),strlen(&test_buf[0]),100);
+ 
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_yLSB,1,&yAccl_LSB,1,100);
+  BMX_Set_Shadow_dis(is_available);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_yMSB,1,&yAccl_MSB,1,100);
+  BMX_Set_Shadow_dis(is_unavailable);
   
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_zLSB,1,&zAccl_LSB,1,100);
+  BMX_Set_Shadow_dis(is_available);
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,Mem_zMSB,1,&zAccl_MSB,1,100);
+  BMX_Set_Shadow_dis(is_unavailable);
+
   xAccl = ((xAccl_MSB*256) + (xAccl_LSB & 0xF0))/16;
   if(xAccl>2047) xAccl -= 4096;
-
+  yAccl = ((yAccl_MSB*256) + (yAccl_LSB & 0xF0))/16;
+  if(yAccl>2047) yAccl -= 4096;
+  xAccl = ((zAccl_MSB*256) + (zAccl_LSB & 0xF0))/16;
+  if(zAccl>2047) zAccl -= 4096;
+  
   xAccl = xAccl*0.0098;
-
-//  xAccl = (float)((xAccl_MSB<<4) + (xAccl_LSB>>4));
-//  xAccl = xAccl*0.0098;
+  yAccl = yAccl*0.0098;
+  zAccl = zAccl*0.0098;
 }
 
-                
+void BMX_Set_Shadow_dis(_Bool status){
+  uint8_t Shadow_dis = 0x13;
+  uint8_t SetValue;
+  
+  if (status == 1) SetValue = 0b00000000;
+  else if ( status == 0) SetValue =  0b01000000;
+  HAL_I2C_Mem_Write(&hi2c1,Addr_Accl<<1,Shadow_dis,1,&SetValue,1,100);
+}
 
+_Bool BMX_Check_connection(void){
+  uint8_t r_data;
+  char buff[I2C_BUF_SIZE];
+
+  HAL_I2C_Mem_Read(&hi2c1,Addr_Accl<<1,0x00,1,&r_data,1,100);
+  if (r_data == 0xFA) sprintf(buff,"Connection available\n",r_data);
+  else if (r_data != 0xFA) sprintf(buff,"Connection unavailable\n",r_data);  
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&buff[0]),strlen(&k[0]),100);
+}
+                
 /**
   * @brief System Clock Configuration
   * @retval None
