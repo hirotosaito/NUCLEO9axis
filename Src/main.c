@@ -43,6 +43,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -77,7 +78,7 @@ void BMX_Init(void);
 void BMX_Accl(void);
 void BMX_Set_Shadow_dis(_Bool);
 _Bool BMX_Check_connection(void);
-
+void Show_float(float);
 
 /**
   * @brief  The application entry point.
@@ -121,6 +122,10 @@ int main(void)
   while (1)
   {
    BMX_Accl();
+   Show_float(xAccl);
+   Show_float(yAccl);
+   Show_float(zAccl);
+   HAL_Delay(1000);
   }
 }
 
@@ -214,6 +219,17 @@ _Bool BMX_Check_connection(void){
   HAL_UART_Transmit (&huart2,(uint8_t*)(&buff[0]),strlen(&k[0]),100);
 }
                 
+void Show_float(float value){
+  char *tempsign = (value < 0) ? "-":"";
+  double tempval = (value<0) ? -1*xAccl:xAccl;
+  int tempInt1 = (int)tempval;
+  float tempfrac = tempval - tempInt1;
+  int tempInt2 = trunc(tempfrac*100000);  
+
+  sprintf(s,"xAccl = %s%d.%04d\n",tempsign,tempInt1,tempInt2);
+  HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
+}
+
 /**
   * @brief System Clock Configuration
   * @retval None
