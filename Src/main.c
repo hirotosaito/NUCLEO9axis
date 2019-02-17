@@ -221,12 +221,12 @@ _Bool BMX_Check_connection(void){
                 
 void Show_float(float value){
   char *tempsign = (value < 0) ? "-":"";
-  double tempval = (value<0) ? -1*xAccl:xAccl;
+  double tempval = (value<0) ? -1*value:value;
   int tempInt1 = (int)tempval;
   float tempfrac = tempval - tempInt1;
   int tempInt2 = trunc(tempfrac*100000);  
 
-  sprintf(s,"xAccl = %s%d.%04d\n",tempsign,tempInt1,tempInt2);
+  sprintf(s,"Accl = %s%d.%04d\n",tempsign,tempInt1,tempInt2);
   HAL_UART_Transmit (&huart2,(uint8_t*)(&s[0]),strlen(&s[0]),100);
 }
 
